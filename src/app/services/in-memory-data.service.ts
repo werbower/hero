@@ -1,7 +1,8 @@
+
+import { MessageService } from './message.service';
 import { Injectable } from '@angular/core';
 import { InMemoryDbService } from 'angular-in-memory-web-api';
 import { RequestInfo } from 'angular-in-memory-web-api/interfaces';
-import { Observable } from 'rxjs';
 import { Hero } from '../Models/hero';
 
 const HEROES: Hero[] = [
@@ -22,12 +23,23 @@ const HEROES: Hero[] = [
 })
 export class InMemoryDataService implements InMemoryDbService {
 
-  constructor() { }
 
-  createDb(reqInfo?: RequestInfo): {} | Observable<{}> | Promise<{}> {
+  constructor(
+    private messageService: MessageService,
+  ) { }
+
+  private log(message: string) {
+    this.messageService.add(`InMemoryService: ${message}`);
+  }
+
+  createDb(reqInfo?: RequestInfo) {
     return {
       heroes: HEROES
     };
+  }
+
+  genId(table: any[]): number {
+    return table.length > 0 ? Math.max(...table.map(t => t.id)) + 1 : 11;
   }
 
 
